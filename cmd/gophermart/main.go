@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/artemaris/loyalty/internal/app"
 	"github.com/artemaris/loyalty/internal/config"

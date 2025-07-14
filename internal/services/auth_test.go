@@ -1,0 +1,86 @@
+package services
+
+import (
+	"testing"
+)
+
+func TestAuthService(t *testing.T) {
+	authService := NewAuthService("test-secret")
+
+	// Тест хеширования пароля
+	password := "testpassword"
+	hashedPassword, err := authService.HashPassword(password)
+	if err != nil {
+		t.Errorf("Failed to hash password: %v", err)
+	}
+
+	if hashedPassword == password {
+		t.Error("Password was not hashed")
+	}
+
+	// Тест проверки правильного пароля
+	err = authService.CheckPassword(hashedPassword, password)
+	if err != nil {
+		t.Errorf("Failed to check correct password: %v", err)
+	}
+
+	// Тест проверки неправильного пароля
+	err = authService.CheckPassword(hashedPassword, "wrongpassword")
+	if err == nil {
+		t.Error("Should fail for wrong password")
+	}
+
+	// Тест генерации токена
+	userID := int64(123)
+	login := "testuser"
+	token, err := authService.GenerateToken(userID, login)
+	if err != nil {
+		t.Errorf("Failed to generate token: %v", err)
+	}
+
+	if token == "" {
+		t.Error("Generated token is empty")
+	}
+
+	// Тест валидации токена
+	claims, err := authService.ValidateToken(token)
+	if err != nil {
+		t.Errorf("Failed to validate token: %v", err)
+	}
+
+	if claims.UserID != userID {
+		t.Errorf("Expected user ID %d, got %d", userID, claims.UserID)
+	}
+
+	if claims.Login != login {
+		t.Errorf("Expected login %s, got %s", login, claims.Login)
+	}
+
+	// Тест валидации неправильного токена
+	_, err = authService.ValidateToken("invalid-token")
+	if err == nil {
+		t.Error("Should fail for invalid token")
+	}
+}
+
+func TestGenerateRandomString(t *testing.T) {
+	length := 32
+	randomString, err := GenerateRandomString(length)
+	if err != nil {
+		t.Errorf("Failed to generate random string: %v", err)
+	}
+
+	if len(randomString) != length*2 { // hex encoding doubles the length
+		t.Errorf("Expected length %d, got %d", length*2, len(randomString))
+	}
+
+	// Генерируем еще раз, чтобы убедиться, что строки разные
+	randomString2, err := GenerateRandomString(length)
+	if err != nil {
+		t.Errorf("Failed to generate second random string: %v", err)
+	}
+
+	if randomString == randomString2 {
+		t.Error("Generated strings should be different")
+	}
+}
