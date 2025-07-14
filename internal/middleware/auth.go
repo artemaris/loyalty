@@ -12,6 +12,14 @@ type AuthMiddleware struct {
 	authService *services.AuthService
 }
 
+// Кастомные типы для ключей контекста
+type contextKey string
+
+const (
+	userIDKey    contextKey = "user_id"
+	userLoginKey contextKey = "user_login"
+)
+
 func NewAuthMiddleware(authService *services.AuthService) *AuthMiddleware {
 	return &AuthMiddleware{
 		authService: authService,
@@ -51,20 +59,20 @@ func (a *AuthMiddleware) Authenticate(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), "user_id", claims.UserID)
-		ctx = context.WithValue(ctx, "user_login", claims.Login)
+		ctx := context.WithValue(r.Context(), userIDKey, claims.UserID)
+		ctx = context.WithValue(ctx, userLoginKey, claims.Login)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
 // GetUserIDFromContext получает ID пользователя из контекста
 func GetUserIDFromContext(ctx context.Context) (int64, bool) {
-	userID, ok := ctx.Value("user_id").(int64)
+	userID, ok := ctx.Value(userIDKey).(int64)
 	return userID, ok
 }
 
 // GetUserLoginFromContext получает логин пользователя из контекста
 func GetUserLoginFromContext(ctx context.Context) (string, bool) {
-	login, ok := ctx.Value("user_login").(string)
+	login, ok := ctx.Value(userLoginKey).(string)
 	return login, ok
 }
