@@ -26,18 +26,25 @@ type App struct {
 }
 
 func New(cfg *config.Config) (*App, error) {
+	log.Printf("Initializing application with config: RunAddress=%s, DatabaseURI=%s, AccrualSystemAddress=%s",
+		cfg.RunAddress, cfg.DatabaseURI, cfg.AccrualSystemAddress)
+
 	// Инициализация storage
+	log.Println("Connecting to database...")
 	storage, err := postgres.New(cfg.DatabaseURI)
 	if err != nil {
 		return nil, fmt.Errorf("failed to initialize storage: %w", err)
 	}
+	log.Println("Database connection established successfully")
 
 	// Инициализация сервисов
+	log.Println("Initializing services...")
 	authService := services.NewAuthService(cfg.JWTSecret)
 	luhnService := services.NewLuhnService()
 	accrualService := services.NewAccrualService(cfg.AccrualSystemAddress)
 
 	// Инициализация handlers
+	log.Println("Initializing handlers...")
 	authHandler := handlers.NewAuthHandler(storage, authService)
 	ordersHandler := handlers.NewOrdersHandler(storage, luhnService, accrualService)
 	balanceHandler := handlers.NewBalanceHandler(storage)
@@ -59,6 +66,7 @@ func New(cfg *config.Config) (*App, error) {
 		Handler: app.setupRoutes(),
 	}
 
+	log.Println("Application initialized successfully")
 	return app, nil
 }
 
