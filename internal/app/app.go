@@ -11,7 +11,7 @@ import (
 	"github.com/artemaris/loyalty/internal/middleware"
 	"github.com/artemaris/loyalty/internal/services"
 	"github.com/artemaris/loyalty/internal/storage"
-	postgres "github.com/artemaris/loyalty/internal/storage/postgres"
+	"github.com/artemaris/loyalty/internal/storage/postgres"
 )
 
 type App struct {

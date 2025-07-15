@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 )
@@ -41,12 +40,7 @@ func (a *AccrualService) GetOrderInfo(ctx context.Context, orderNumber string) (
 	if err != nil {
 		return nil, fmt.Errorf("failed to make request: %w", err)
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			println(err)
-		}
-	}(resp.Body)
+	defer resp.Body.Close()
 
 	switch resp.StatusCode {
 	case http.StatusOK:
