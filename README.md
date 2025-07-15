@@ -42,8 +42,15 @@ go mod download
 CREATE DATABASE loyalty;
 ```
 
-Выполните миграции:
+**Важно:** Выполните миграции перед запуском приложения:
 ```bash
+# Go-версия (рекомендуется)
+go run ./cmd/migrate -uri="postgres://username:password@localhost:5432/loyalty?sslmode=disable"
+
+# Или через Makefile
+make migrate DATABASE_URI="postgres://username:password@localhost:5432/loyalty?sslmode=disable"
+
+# Shell-версия (устаревшая)
 ./scripts/migrate.sh "postgres://username:password@localhost:5432/loyalty?sslmode=disable"
 ```
 
@@ -97,6 +104,13 @@ go test ./...
 
 ### Тестирование API
 ```bash
+# Go-версия (рекомендуется)
+go run ./cmd/test-api -url="http://localhost:8080"
+
+# Или через Makefile
+make test-api API_URL="http://localhost:8080"
+
+# Shell-версия (устаревшая)
 ./scripts/test_api.sh http://localhost:8080
 ```
 

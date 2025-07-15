@@ -20,14 +20,19 @@ GRANT ALL PRIVILEGES ON DATABASE loyalty TO loyalty_user;
 
 ## Выполнение миграций
 
-Используйте скрипт миграций:
+**Обязательно выполните миграции перед первым запуском приложения!**
 
+### Go-версия (рекомендуется):
 ```bash
-./scripts/migrate.sh "postgres://username:password@localhost:5432/loyalty?sslmode=disable"
+go run ./cmd/migrate -uri="postgres://username:password@localhost:5432/loyalty?sslmode=disable"
 ```
 
-Или выполните SQL вручную:
+### Через Makefile:
+```bash
+make migrate DATABASE_URI="postgres://username:password@localhost:5432/loyalty?sslmode=disable"
+```
 
+### Ручное выполнение SQL:
 ```bash
 psql "postgres://username:password@localhost:5432/loyalty?sslmode=disable" -f migrations/001_init_schema.sql
 ```
