@@ -44,12 +44,7 @@ func (h *OrdersHandler) UploadOrder(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to read request body", http.StatusBadRequest)
 		return
 	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			println(err)
-		}
-	}(r.Body)
+	defer r.Body.Close()
 
 	orderNumber := string(body)
 	if orderNumber == "" {
