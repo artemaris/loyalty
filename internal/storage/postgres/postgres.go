@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 
 	"github.com/artemaris/loyalty/internal/storage"
 )
