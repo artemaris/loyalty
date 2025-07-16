@@ -107,10 +107,7 @@ func (a *App) setupRoutes() http.Handler {
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		_, err := w.Write([]byte("GopherMart API"))
-		if err != nil {
-			println(err)
-		}
+		w.Write([]byte("GopherMart API"))
 	})
 
 	return middleware.Compression(mux)

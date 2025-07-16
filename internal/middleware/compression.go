@@ -15,12 +15,7 @@ func Compression(next http.Handler) http.Handler {
 		}
 
 		gw := gzip.NewWriter(w)
-		defer func(gw *gzip.Writer) {
-			err := gw.Close()
-			if err != nil {
-				println(err)
-			}
-		}(gw)
+		defer gw.Close()
 
 		gzipWriter := &gzipResponseWriter{
 			ResponseWriter: w,

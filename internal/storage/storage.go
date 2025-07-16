@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+
 	"github.com/artemaris/loyalty/internal/models"
 )
 
